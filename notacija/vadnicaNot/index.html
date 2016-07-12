@@ -16,6 +16,17 @@
 <body>
 
 <script src="../../phaser.min.js"></script>
+<script src="https://zigacernigoj.github.io/diploma-assets/js/store+json2.min.js"></script>
+<script>
+    initStore();
+    function initStore() {
+        if (!store.enabled) {
+            alert('Local storage is not supported by your browser. Please disable "Private Mode", or upgrade to a modern browser.')
+            return;
+        }
+    }
+</script>
+
 <script src="script.js"></script>
 </body>
 </html>

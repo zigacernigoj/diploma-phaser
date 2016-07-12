@@ -7,8 +7,10 @@ window.onload = function() {
 
     var baseURL = 'https://zigacernigoj.github.io/diploma-assets/';
 
-    localStorage.setItem('mode', 'student');
-    var mode = localStorage.getItem('mode');
+    //localStorage.setItem('mode', 'student');
+    //var mode = localStorage.getItem('mode');
+    store.set('mode', 'student');
+    var mode = store.get('mode');
 
     var crte = null;
     var nota = null;
@@ -400,8 +402,10 @@ window.onload = function() {
 
 
     function setMode(newMode){
-        localStorage.setItem('mode', newMode);
-        mode = localStorage.getItem('mode');
+        //localStorage.setItem('mode', newMode);
+        //mode = localStorage.getItem('mode');
+        store.set('mode', newMode);
+        var mode = store.get('mode');
     }
 
 
