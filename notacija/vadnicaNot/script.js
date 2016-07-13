@@ -1,4 +1,4 @@
-window.onload = function() {
+window.onload = function () {
 
     // "100vw", "100vh" --> v htmlju padding, margin na 0
     var game = new Phaser.Game(800, 600, Phaser.AUTO, '', {preload: preload, create: create});
@@ -19,11 +19,11 @@ window.onload = function() {
     var correctNoteNumber = null;
     var trenutniRez = null;
 
-    var zacniGumb, naprejGumb, nazajGumb, nadaljujGumb, koncajGumb, zbirkaBtn;
+    var zacniBtn, naprejBtn, nazajBtn, nadaljujBtn, koncajBtn, zbirkaBtn;
 
-    var cGumb, dGumb, eGumb, fGumb, gGumb, aGumb, hGumb;
-    var cisGumb, disGumb, eisGumb, fisGumb, gisGumb, aisGumb, hisGumb;
-    var cesGumb, desGumb, esGumb, fesGumb, gesGumb, asGumb, hesGumb;
+    var cBtn, dBtn, eBtn, fBtn, gBtn, aBtn, hBtn;
+    var cisBtn, disBtn, eisBtn, fisBtn, gisBtn, aisBtn, hisBtn;
+    var cesBtn, desBtn, esBtn, fesBtn, gesBtn, asBtn, hesBtn;
 
     var yPositions = [230, 216, 198, 180, 162, 144, 126];
     var navbarHeight = 30;
@@ -31,11 +31,18 @@ window.onload = function() {
     var paddingLeft = 50;
     var paddingLeftSmall = 10;
 
-    var naslov = null;
-    var navodila = null;
+    var naslovText = null;
+    var navodilaText = null;
 
-    var gameName = null;
-    var uspeh2 = null;
+    var nastavitveText = null;
+    var noteSelectText = null;
+    var kljucSelectText = null;
+
+    var cOption, dOption, eOption, fOption, gOption, aOption, hOption;
+    var violinskiOption, basovskiOption;
+
+    var gameNameText = null;
+    var uspehText = null;
 
     var preostaliPrimeriText = null;
     var preostaliCasText = null;
@@ -43,7 +50,7 @@ window.onload = function() {
     var playBtn = null;
     var pauseBtn = null;
 
-    var besediloUspeh = null;
+    //var besediloUspeh = null;
     var narobe = null;
     var pravilna = null;
 
@@ -59,19 +66,26 @@ window.onload = function() {
 
     var pauseMenuBg;
 
+    var narobeSound;
+
 
     function preload() {
 
-        loadingText = game.add.text(game.world.centerX, game.world.centerY, 'Igra se nalaga.', { fill: '#ffffff' });
+        loadingText = game.add.text(game.world.centerX, game.world.centerY, 'Igra se nalaga.', {fill: '#ffffff'});
         loadingText.anchor.set(0.5, 0.5);
         game.load.onLoadStart.add(loadingScreen, this);
 
         game.load.crossOrigin = 'anonymous';
 
+
+        game.load.spritesheet( 'checkbox', 'checkbox.png', 12, 12 );
+
         loadNoteImgs();
         loadPravilnostImgs();
         loadBtns();
         loadNoteBtns();
+
+        loadSounds();
     }
 
     function loadBtns() {
@@ -123,6 +137,10 @@ window.onload = function() {
         game.load.image('hes', baseURL + mode + '/btn/note/hesBtn.png');
     }
 
+    function loadSounds() {
+        game.load.audio('narobeSoundSrc', baseURL + '/sounds/narobe.mp3');
+    }
+
     function loadingScreen() {
         loadingText.setText("Igra se nalaga.");
     }
@@ -133,9 +151,9 @@ window.onload = function() {
         game.stage.backgroundColor = '#82aed6';
 
         var style1 = {font: "65px Arial", fill: "#000000", align: "center"};
-        naslov = game.add.text(game.world.centerX, game.world.top, "Vadnica not", style1);
-        naslov.anchor.set(0.5, -0.5);
-        naslov.alpha = 1;
+        naslovText = game.add.text(game.world.centerX, game.world.top, "Vadnica not", style1);
+        naslovText.anchor.set(0.5, -0.5);
+        naslovText.alpha = 1;
 
         var style2 = {
             font: "25px Arial",
@@ -144,23 +162,26 @@ window.onload = function() {
             wordWrap: true,
             wordWrapWidth: game.world.width - 50
         };
-        navodila = game.add.text(game.world.centerX, game.world.centerY, "Vadnica not ti bo pomagala izpiliti poznavanje not in njihov položaj na različnih lestvicah. " +
+        navodilaText = game.add.text(game.world.centerX, game.world.centerY, "Vadnica not ti bo pomagala izpiliti poznavanje not in njihov položaj na različnih lestvicah. " +
             "Klikni gumb Naprej in si v meniju izberi note, lestvico in predznake.", style2);
-        navodila.anchor.set(0.5, 0.8);
-        navodila.alpha = 1;
-        navodila.addFontWeight('bold', 105);
-        navodila.addFontWeight('normal', 111);
+        navodilaText.anchor.set(0.5, 0.8);
+        navodilaText.alpha = 1;
+        navodilaText.addFontWeight('bold', 105);
+        navodilaText.addFontWeight('normal', 111);
 
-        naprejGumb = game.add.button(800, 600, 'naprej', zacniAkcija, this, 2, 1, 0);
-        naprejGumb.anchor.set(1, 1);
+        naprejBtn = game.add.button(800, 600, 'naprej', makeSettings, this, 2, 1, 0);
+        naprejBtn.anchor.set(1, 1);
 
-        nazajGumb = game.add.button(0, 600, 'nazaj', gotoMain, this, 2, 1, 0);
-        nazajGumb.anchor.set(0, 1);
+        nazajBtn = game.add.button(0, 600, 'nazaj', gotoMain, this, 2, 1, 0);
+        nazajBtn.anchor.set(0, 1);
 
-        //naprejGumb.onInputOver.add(over, this);
-        //naprejGumb.onInputOut.add(out, this);
-        //naprejGumb.onInputUp.add(up, this);
+        //naprejBtn.onInputOver.add(over, this);
+        //naprejBtn.onInputOut.add(out, this);
+        //naprejBtn.onInputUp.add(up, this);
 
+
+        narobeSound = game.add.audio('narobeSoundSrc');
+        //game.sound.setDecodedCallback(narobeSound, zacniAkcija, this); // preskoci na igro brez pritiska na gumb
     }
 
     function createNavbar() {
@@ -183,10 +204,10 @@ window.onload = function() {
             wordWrap: true,
             wordWrapWidth: game.world.width - 50
         };
-        gameName = game.add.text(paddingLeftSmall, game.world.top, "Vadnica not", style3);
+        gameNameText = game.add.text(paddingLeftSmall, game.world.top, "Vadnica not", style3);
 
-        uspeh2 = game.add.text(600, game.world.top, "Uspeh: " + uspehOds.toFixed(0) + "%", style3);
-        //uspeh2.anchor.setTo(1, 0);
+        uspehText = game.add.text(600, game.world.top, "Uspeh: " + uspehOds.toFixed(0) + "%", style3);
+        //uspehText.anchor.setTo(1, 0);
 
         preostaliPrimeriText = game.add.text(230, game.world.top, "Primeri: ∞", style3);
         preostaliCasText = game.add.text(440, game.world.top, "Čas: ∞", style3);
@@ -198,12 +219,12 @@ window.onload = function() {
 
 
     function unPause() {
-        if(game.paused) {
+        if (game.paused) {
             game.paused = false;
             pauseText.kill();
             pauseMenuBg.kill();
-            nadaljujGumb.kill();
-            koncajGumb.kill();
+            nadaljujBtn.kill();
+            koncajBtn.kill();
         }
     }
 
@@ -213,7 +234,7 @@ window.onload = function() {
 
 
         var width = 800; // example;
-        var height = 600-navbarHeight; // example;
+        var height = 600 - navbarHeight; // example;
         var bmd = game.add.bitmapData(width, height);
 
         bmd.ctx.beginPath();
@@ -236,11 +257,11 @@ window.onload = function() {
 
         //game.input.onDown.add(unPause, self);
 
-        nadaljujGumb = game.add.button(800, 600, 'nadaljuj', unPause, this, 2, 1, 0);
-        nadaljujGumb.anchor.set(1, 1);
+        nadaljujBtn = game.add.button(800, 600, 'nadaljuj', unPause, this, 2, 1, 0);
+        nadaljujBtn.anchor.set(1, 1);
 
-        koncajGumb = game.add.button(0, 600, 'koncaj', gotoMain, this, 2, 1, 0);
-        koncajGumb.anchor.set(0, 1);
+        koncajBtn = game.add.button(0, 600, 'koncaj', gotoMain, this, 2, 1, 0);
+        koncajBtn.anchor.set(0, 1);
 
     }
 
@@ -248,13 +269,19 @@ window.onload = function() {
         window.location.href = 'https://www.google.si';
     }
 
+    function destroyStartScreen() {
+        naprejBtn.kill();
+        nazajBtn.kill();
+        naslovText.kill();
+        navodilaText.kill();
+        game.stage.backgroundColor = '#ffffff';
+    }
+
     function zacniAkcija() {
 
-        naprejGumb.kill();
-        nazajGumb.kill();
-        naslov.kill();
-        navodila.kill();
-        game.stage.backgroundColor = '#ffffff';
+        //destroyStartScreen();
+        destroySettings();
+        console.log(cOption);
 
         createNavbar();
 
@@ -266,36 +293,36 @@ window.onload = function() {
         placeNoteBtns();
 
 
-        var style = {font: "40px Arial", fill: "#000000", align: "center"};
-        besediloUspeh = game.add.text(550, game.world.centerY, "Uspeh: " + uspehOds.toFixed(0) + "%", style);
-        besediloUspeh.alpha = 1;
+        //var style = {font: "40px Arial", fill: "#000000", align: "center"};
+        //besediloUspeh = game.add.text(550, game.world.centerY, "Uspeh: " + uspehOds.toFixed(0) + "%", style);
+        //besediloUspeh.alpha = 1;
     }
 
 
     function placeNoteBtns() {
-        cGumb = game.add.button(75, 450, 'c', checkIfCorrect, this, 2, 1, 0);
-        dGumb = game.add.button(175, 450, 'd', checkIfCorrect, this, 2, 1, 0);
-        eGumb = game.add.button(275, 450, 'e', checkIfCorrect, this, 2, 1, 0);
-        fGumb = game.add.button(375, 450, 'f', checkIfCorrect, this, 2, 1, 0);
-        gGumb = game.add.button(475, 450, 'g', checkIfCorrect, this, 2, 1, 0);
-        aGumb = game.add.button(575, 450, 'a', checkIfCorrect, this, 2, 1, 0);
-        hGumb = game.add.button(675, 450, 'h', checkIfCorrect, this, 2, 1, 0);
+        cBtn = game.add.button(75, 450, 'c', checkIfCorrect, this, 2, 1, 0);
+        dBtn = game.add.button(175, 450, 'd', checkIfCorrect, this, 2, 1, 0);
+        eBtn = game.add.button(275, 450, 'e', checkIfCorrect, this, 2, 1, 0);
+        fBtn = game.add.button(375, 450, 'f', checkIfCorrect, this, 2, 1, 0);
+        gBtn = game.add.button(475, 450, 'g', checkIfCorrect, this, 2, 1, 0);
+        aBtn = game.add.button(575, 450, 'a', checkIfCorrect, this, 2, 1, 0);
+        hBtn = game.add.button(675, 450, 'h', checkIfCorrect, this, 2, 1, 0);
 
-        cisGumb = game.add.button(75, 400, 'cis', checkIfCorrect, this, 2, 1, 0);
-        disGumb = game.add.button(175, 400, 'dis', checkIfCorrect, this, 2, 1, 0);
-        eisGumb = game.add.button(275, 400, 'eis', checkIfCorrect, this, 2, 1, 0);
-        fisGumb = game.add.button(375, 400, 'fis', checkIfCorrect, this, 2, 1, 0);
-        gisGumb = game.add.button(475, 400, 'gis', checkIfCorrect, this, 2, 1, 0);
-        aisGumb = game.add.button(575, 400, 'ais', checkIfCorrect, this, 2, 1, 0);
-        hisGumb = game.add.button(675, 400, 'his', checkIfCorrect, this, 2, 1, 0);
+        cisBtn = game.add.button(75, 400, 'cis', checkIfCorrect, this, 2, 1, 0);
+        disBtn = game.add.button(175, 400, 'dis', checkIfCorrect, this, 2, 1, 0);
+        eisBtn = game.add.button(275, 400, 'eis', checkIfCorrect, this, 2, 1, 0);
+        fisBtn = game.add.button(375, 400, 'fis', checkIfCorrect, this, 2, 1, 0);
+        gisBtn = game.add.button(475, 400, 'gis', checkIfCorrect, this, 2, 1, 0);
+        aisBtn = game.add.button(575, 400, 'ais', checkIfCorrect, this, 2, 1, 0);
+        hisBtn = game.add.button(675, 400, 'his', checkIfCorrect, this, 2, 1, 0);
 
-        cesGumb = game.add.button(75, 500, 'ces', checkIfCorrect, this, 2, 1, 0);
-        desGumb = game.add.button(175, 500, 'des', checkIfCorrect, this, 2, 1, 0);
-        esGumb = game.add.button(275, 500, 'es', checkIfCorrect, this, 2, 1, 0);
-        fesGumb = game.add.button(375, 500, 'fes', checkIfCorrect, this, 2, 1, 0);
-        gesGumb = game.add.button(475, 500, 'ges', checkIfCorrect, this, 2, 1, 0);
-        asGumb = game.add.button(575, 500, 'as', checkIfCorrect, this, 2, 1, 0);
-        hesGumb = game.add.button(675, 500, 'hes', checkIfCorrect, this, 2, 1, 0);
+        cesBtn = game.add.button(75, 500, 'ces', checkIfCorrect, this, 2, 1, 0);
+        desBtn = game.add.button(175, 500, 'des', checkIfCorrect, this, 2, 1, 0);
+        esBtn = game.add.button(275, 500, 'es', checkIfCorrect, this, 2, 1, 0);
+        fesBtn = game.add.button(375, 500, 'fes', checkIfCorrect, this, 2, 1, 0);
+        gesBtn = game.add.button(475, 500, 'ges', checkIfCorrect, this, 2, 1, 0);
+        asBtn = game.add.button(575, 500, 'as', checkIfCorrect, this, 2, 1, 0);
+        hesBtn = game.add.button(675, 500, 'hes', checkIfCorrect, this, 2, 1, 0);
     }
 
 
@@ -311,6 +338,9 @@ window.onload = function() {
             pravilni++;
         }
         else {
+
+            narobeSound.play();
+
             console.log('narobe');
             trenutniRez = game.add.image(game.world.centerX, game.world.centerY, 'narobe');
             var style3 = {font: "40px Arial", fill: "#000000", align: "center"};
@@ -330,9 +360,9 @@ window.onload = function() {
         uspehOds = uspeh * 100;
         console.log('uspeh', uspeh, ', pravilni', pravilni);
 
-        besediloUspeh.setText("Uspeh: " + uspehOds.toFixed(0) + "%");
+        //besediloUspeh.setText("Uspeh: " + uspehOds.toFixed(0) + "%");
 
-        uspeh2.setText("Uspeh: " + uspehOds.toFixed(0) + "%");
+        uspehText.setText("Uspeh: " + uspehOds.toFixed(0) + "%");
         preostaliPrimeriText.setText("Primeri: ∞");
 
         trenutniRez.alpha = 1;
@@ -352,45 +382,57 @@ window.onload = function() {
 
         var nextN = Math.round(Math.random() * (6)); // namesto 7 stevilo not
 
+
+        console.log(nextN === 0 && cOption.state === true);
+        console.log(nextN === 1 && dOption.state === true);
+        console.log(nextN === 2 && eOption.state === true);
+        console.log(nextN === 3 && fOption.state === true);
+        console.log(nextN === 4 && gOption.state === true);
+        console.log(nextN === 5 && aOption.state === true);
+        console.log(nextN === 6 && hOption.state === true);
+
         if (nota !== null) {
             nota.kill();
         }
 
         //(spodnji) 0 = C, 1 = D, 2 = E, 3 = F, 4 = G, 5 = A, 6 = H
-        if (nextN === 0) {
+        if (nextN === 0 && cOption.state === true) {
             nota = game.add.image(game.world.centerX, yPositions[0], 'nota0'); // c spodnji
             correctNote = 'c';
             correctNoteNumber = 0;
         }
-        if (nextN === 1) {
+        else if (nextN === 1 && dOption.state === true) {
             nota = game.add.image(game.world.centerX, yPositions[1], 'nota1'); // d spodnji
             correctNote = 'd';
             correctNoteNumber = 1;
         }
-        if (nextN === 2) {
+        else if (nextN === 2 && eOption.state === true) {
             nota = game.add.image(game.world.centerX, yPositions[2], 'nota1'); // e spodnji
             correctNote = 'e';
             correctNoteNumber = 2;
         }
-        if (nextN === 3) {
+        else if (nextN === 3 && fOption.state === true) {
             nota = game.add.image(game.world.centerX, yPositions[3], 'nota1'); // f spodnji
             correctNote = 'f';
             correctNoteNumber = 3;
         }
-        if (nextN === 4) {
+        else if (nextN === 4 && gOption.state === true) {
             nota = game.add.image(game.world.centerX, yPositions[4], 'nota1'); // g spodnji
             correctNote = 'g';
             correctNoteNumber = 4;
         }
-        if (nextN === 5) {
+        else if (nextN === 5 && aOption.state === true) {
             nota = game.add.image(game.world.centerX, yPositions[5], 'nota1'); // a spodnji
             correctNote = 'a';
             correctNoteNumber = 5;
         }
-        if (nextN === 6) {
+        else if (nextN === 6 && hOption.state === true) {
             nota = game.add.image(game.world.centerX, yPositions[6], 'nota1'); // h spodnji
             correctNote = 'h';
             correctNoteNumber = 6;
+        }
+        else {
+            nextNote();
         }
 
         nota.alpha = 0;
@@ -400,14 +442,145 @@ window.onload = function() {
         console.log(nextN);
     }
 
-
-    function setMode(newMode){
+    function setMode(newMode) {
         //localStorage.setItem('mode', newMode);
         //mode = localStorage.getItem('mode');
         store.set('mode', newMode);
         var mode = store.get('mode');
     }
 
+
+    function makeSettings() {
+
+        destroyStartScreen();
+
+        // barva gumbov #3D85C6
+
+        var style1 = {font: "40px Arial", fill: "#000000", align: "center"};
+        nastavitveText = game.add.text(game.world.centerX, game.world.top, "Nastavitve", style1);
+        nastavitveText.anchor.set(0.5, -0.5);
+
+
+        var style2 = {font: "30px Arial", fill: "#000000", align: "center"};
+        noteSelectText = game.add.text(50, 80, "Izberi note", style2);
+
+        cOption = game.add.checkbox(50, 125, {text: 'C', style: {fill: '#000000', fontSize: 20}}, 'checkbox', true, -5);
+        cOption.inputEnabled = true;
+        cOption.events.onInputUp.add(checkSelected, this);
+
+        dOption = game.add.checkbox(50, 155, {text: 'D', style: {fill: '#000000', fontSize: 20}}, 'checkbox', true, -5);
+        dOption.inputEnabled = true;
+        dOption.events.onInputUp.add(checkSelected, this);
+
+        eOption = game.add.checkbox(50, 185, {text: 'E', style: {fill: '#000000', fontSize: 20}}, 'checkbox', true, -5);
+        eOption.inputEnabled = true;
+        eOption.events.onInputUp.add(checkSelected, this);
+
+        fOption = game.add.checkbox(50, 215, {text: 'F', style: {fill: '#000000', fontSize: 20}}, 'checkbox', true, -5);
+        fOption.inputEnabled = true;
+        fOption.events.onInputUp.add(checkSelected, this);
+
+        gOption = game.add.checkbox(50, 245, {text: 'G', style: {fill: '#000000', fontSize: 20}}, 'checkbox', true, -5);
+        gOption.inputEnabled = true;
+        gOption.events.onInputUp.add(checkSelected, this);
+
+        aOption = game.add.checkbox(50, 275, {text: 'A', style: {fill: '#000000', fontSize: 20}}, 'checkbox', true, -5);
+        aOption.inputEnabled = true;
+        aOption.events.onInputUp.add(checkSelected, this);
+
+        hOption = game.add.checkbox(50, 305, {text: 'H', style: {fill: '#000000', fontSize: 20}}, 'checkbox', true, -5);
+        hOption.inputEnabled = true;
+        hOption.events.onInputUp.add(checkSelected, this);
+
+        kljucSelectText = game.add.text(250, 80, "Izberi ključe", style2);
+
+        violinskiOption = game.add.checkbox(250, 125, {text: 'violinski', style: {fill: '#000000', fontSize: 20}}, 'checkbox', true, -7);
+        violinskiOption.enabled = false;
+        basovskiOption = game.add.checkbox(250, 155, {text: 'basovski', style: {fill: '#000000', fontSize: 20}}, 'checkbox', undefined, -7);
+        basovskiOption.enabled = false;
+
+        naprejBtn = game.add.button(800, 600, 'naprej', proceed, this, 2, 1, 0);
+        naprejBtn.anchor.set(1, 1);
+        console.log(naprejBtn);
+
+
+        nazajBtn = game.add.button(0, 600, 'nazaj', gotoMain, this, 2, 1, 0);
+        nazajBtn.anchor.set(0, 1);
+    }
+
+    var neIzbrani = null;
+
+    function checkSelected() {
+        console.log("testing");
+        if(neIzbrani !== null) {
+            neIzbrani.kill();
+        }
+
+        var x = 0;
+
+        if(cOption.state === false){
+            x++;
+        }
+        if(dOption.state === false){
+            x++;
+        }
+        if(eOption.state === false){
+            x++;
+        }
+        if(fOption.state === false){
+            x++;
+        }
+        if(gOption.state === false){
+            x++;
+        }
+        if(aOption.state === false){
+            x++;
+        }
+        if(hOption.state === false){
+            x++;
+        }
+
+        if(x > 5) {
+            var style = {font: "30px Arial", fill: "#ff0000", align: "center"};
+            neIzbrani = game.add.text(game.world.centerX, 600, "Izberi vsaj 2 noti", style);
+            neIzbrani.anchor.set(0.5, 1);
+
+            return false;
+        }
+        else {
+            if(neIzbrani !== null) {
+                neIzbrani.kill();
+            }
+            return true;
+        }
+    }
+
+    function proceed() {
+        if(checkSelected() === true) {
+            zacniAkcija();
+        }
+    }
+
+    function destroySettings() {
+
+        nastavitveText.kill();
+        noteSelectText.kill();
+        kljucSelectText.kill();
+
+        cOption.kill();
+        dOption.kill();
+        eOption.kill();
+        fOption.kill();
+        gOption.kill();
+        aOption.kill();
+        hOption.kill();
+
+        violinskiOption.kill();
+        basovskiOption.kill();
+
+        naprejBtn.kill();
+        nazajBtn.kill();
+    }
 
 
 };
