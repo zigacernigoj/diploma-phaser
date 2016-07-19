@@ -12,8 +12,8 @@ window.onload = function () {
     store.set('mode', 'student');
     var mode = store.get('mode');
 
-    var crte = null;
-    var nota = null;
+    var crtovje = null;
+    var prikazanaNota = null;
 
     var correctNote = null;
     var correctNoteNumber = null;
@@ -25,7 +25,40 @@ window.onload = function () {
     var cisBtn, disBtn, eisBtn, fisBtn, gisBtn, aisBtn, hisBtn;
     var cesBtn, desBtn, esBtn, fesBtn, gesBtn, asBtn, hesBtn;
 
-    var yPositions = [230, 216, 198, 180, 162, 144, 126];
+    var yPositions = [263, 245, 227, 209, 191, 173, 155, 137, 119, 101, 83, 65, 47,
+        227, 209, 191, 173, 155, 137, 119, 101, 83, 65, 47, 29, 11,
+        209, 191, 173, 155, 137, 119, 101, 83, 65, 47, 29, 11, -7]; // 18px narazen
+
+    var yViolinski = ['c', 'd', 'e', 'f', 'g', 'a', 'h', 'c', 'd', 'e', 'f', 'g', 'a',
+        'cis', 'dis', 'eis', 'fis', 'gis', 'ais', 'his', 'cis', 'dis', 'eis', 'fis', 'gis', 'ais',
+        'ces', 'des', 'es', 'fes', 'ges', 'as', 'hes', 'ces', 'des', 'es', 'fes', 'ges', 'as'];
+
+    var yBasovski  = ['e', 'f', 'g', 'a', 'h', 'c', 'd', 'e', 'f', 'g', 'a', 'h', 'c',
+        'eis', 'fis', 'gis', 'ais', 'his', 'cis', 'dis', 'eis', 'fis', 'gis', 'ais', 'his', 'cis',
+        'es', 'fes', 'ges', 'as', 'hes', 'ces', 'des', 'es', 'fes', 'ges', 'as', 'hes', 'ces'];
+
+    var yAltovski  = ['d', 'e', 'f', 'g', 'a', 'h', 'c', 'd', 'e', 'f', 'g', 'a', 'h',
+        'dis', 'eis', 'fis', 'gis', 'ais', 'his', 'cis', 'dis', 'eis', 'fis', 'gis', 'ais', 'his',
+        'des', 'es', 'fes', 'ges', 'as', 'hes', 'ces', 'des', 'es', 'fes', 'ges', 'as', 'hes'];
+
+
+    var ySopranski = ['a', 'h', 'c', 'd', 'e', 'f', 'g', 'a', 'h', 'c', 'd', 'e', 'f',
+        'ais', 'his', 'cis', 'dis', 'eis', 'fis', 'gis', 'ais', 'his', 'cis', 'dis', 'eis', 'fis',
+        'as', 'hes', 'ces', 'des', 'es', 'fes', 'ges', 'as', 'hes', 'ces', 'des', 'es', 'fes'];
+
+
+    var yTenorski  = ['h', 'c', 'd', 'e', 'f', 'g', 'a', 'h', 'c', 'd', 'e', 'f', 'g',
+        'his', 'cis', 'dis', 'eis', 'fis', 'gis', 'ais', 'his', 'cis', 'dis', 'eis', 'fis', 'gis',
+        'hes', 'ces', 'des', 'es', 'fes', 'ges', 'as', 'hes', 'ces', 'des', 'es', 'fes', 'ges'];
+
+    var notaCrtaBrez = ['notaCrta', 'notaBrez', 'notaBrez', 'notaBrez', 'notaBrez', 'notaBrez', 'notaBrez', 'notaBrez', 'notaBrez', 'notaBrez', 'notaBrez', 'notaBrez', 'notaCrta',
+        'visajCrta', 'visajBrez', 'visajBrez', 'visajBrez', 'visajBrez', 'visajBrez', 'visajBrez', 'visajBrez', 'visajBrez', 'visajBrez', 'visajBrez', 'visajBrez', 'visajCrta',
+        'nizajCrta', 'nizajBrez', 'nizajBrez', 'nizajBrez', 'nizajBrez', 'nizajBrez', 'nizajBrez', 'nizajBrez', 'nizajBrez', 'nizajBrez', 'nizajBrez', 'nizajBrez', 'nizajCrta'];
+
+    var koncneNote = [];
+    var izbraniKljuc;
+
+
     var navbarHeight = 30;
 
     var paddingLeft = 50;
@@ -38,8 +71,11 @@ window.onload = function () {
     var noteSelectText = null;
     var kljucSelectText = null;
 
-    var cOption, dOption, eOption, fOption, gOption, aOption, hOption;
-    var violinskiOption, basovskiOption;
+    var cOption, dOption, eOption, fOption, gOption, aOption, hOption,
+        cisOption, disOption, eisOption, fisOption, gisOption, aisOption, hisOption,
+        cesOption, desOption, esOption, fesOption, gesOption, asOption, hesOption;
+
+    var violinskiOption, basovskiOption, altovskiOption, sopranskiOption, tenorskiOption;
 
     var gameNameText = null;
     var uspehText = null;
@@ -79,6 +115,7 @@ window.onload = function () {
 
 
         game.load.spritesheet( 'checkbox', 'checkbox.png', 12, 12 );
+        game.load.spritesheet( 'radiobutton', 'radiobutton.png', 12, 12 );
 
         loadNoteImgs();
         loadPravilnostImgs();
@@ -101,9 +138,22 @@ window.onload = function () {
     }
 
     function loadNoteImgs() {
-        game.load.image('crte', baseURL + mode + '/notacija/crtovje.png');
-        game.load.image('nota0', baseURL + mode + '/notacija/celinkaCrta.png');
-        game.load.image('nota1', baseURL + mode + '/notacija/celinka.png');
+
+        game.load.image('violinski', baseURL + mode + '/notacija/kljuci/treble.png');   // treble = violinski
+        game.load.image('basovski', baseURL + mode + '/notacija/kljuci/bass.png');      // bass = bas
+        game.load.image('altovski', baseURL + mode + '/notacija/kljuci/alto.png');      // alto = alt
+        game.load.image('sopranski', baseURL + mode + '/notacija/kljuci/soprano.png');  // soprano = sopran
+        game.load.image('tenorski', baseURL + mode + '/notacija/kljuci/tenor.png');     // tenor = tenor
+
+        game.load.image('notaCrta', baseURL + mode + '/notacija/celinkaCrta.png');
+        game.load.image('notaBrez', baseURL + mode + '/notacija/celinka.png');
+
+        game.load.image('visajCrta', baseURL + mode + '/notacija/visajCelinkaCrta.png');
+        game.load.image('visajBrez', baseURL + mode + '/notacija/visajCelinkaBrez.png');
+
+        game.load.image('nizajCrta', baseURL + mode + '/notacija/nizajCelinkaCrta.png');
+        game.load.image('nizajBrez', baseURL + mode + '/notacija/nizajCelinkaBrez.png');
+
     }
 
     function loadPravilnostImgs() {
@@ -281,12 +331,11 @@ window.onload = function () {
 
         //destroyStartScreen();
         destroySettings();
-        console.log(cOption);
 
         createNavbar();
 
-        crte = game.add.sprite(game.world.centerX, game.world.top, 'crte');
-        crte.anchor.setTo(0.5, 0);
+        placeCrtovje();
+        prepareNotes();
 
         nextNote();
 
@@ -298,6 +347,32 @@ window.onload = function () {
         //besediloUspeh.alpha = 1;
     }
 
+
+    function placeCrtovje() {
+
+        if(violinskiOption.state === true) {
+            crtovje = game.add.sprite(game.world.centerX, game.world.top, 'violinski');
+            izbraniKljuc = yViolinski;
+        }
+        else if(basovskiOption.state === true) {
+            crtovje = game.add.sprite(game.world.centerX, game.world.top, 'basovski');
+            izbraniKljuc = yBasovski;
+        }
+        else if(altovskiOption.state === true) {
+            crtovje = game.add.sprite(game.world.centerX, game.world.top, 'altovski');
+            izbraniKljuc = yAltovski;
+        }
+        else if(sopranskiOption.state === true) {
+            crtovje = game.add.sprite(game.world.centerX, game.world.top, 'sopranski');
+            izbraniKljuc = ySopranski;
+        }
+        else if(tenorskiOption.state === true) {
+            crtovje = game.add.sprite(game.world.centerX, game.world.top, 'tenorski');
+            izbraniKljuc = yTenorski;
+        }
+
+        crtovje.anchor.setTo(0.5, 0.1);
+    }
 
     function placeNoteBtns() {
         cBtn = game.add.button(75, 450, 'c', checkIfCorrect, this, 2, 1, 0);
@@ -326,39 +401,34 @@ window.onload = function () {
     }
 
 
-    function checkIfCorrect(y) {
-        var selectedNote = y._frame.name.substring(y._frame.name.length - 8, y._frame.name.length - 7);
+    function checkIfCorrect(selectedButton) {
         counter++;
-        //console.log(y._frame.name);
-        //console.log('to je y', selectedNote, ', counter', counter);
 
-        if (correctNote === selectedNote) {
-            console.log('pravilno');
-            trenutniRez = game.add.image(game.world.centerX, game.world.centerY, 'pravilno');
+        if (prikazanaNota.name === selectedButton.key) {
+            //console.log('pravilno');
+            trenutniRez = game.add.image(game.world.centerX, 280, 'pravilno');
             pravilni++;
         }
         else {
-
             narobeSound.play();
-
-            console.log('narobe');
-            trenutniRez = game.add.image(game.world.centerX, game.world.centerY, 'narobe');
+            //console.log('narobe');
+            trenutniRez = game.add.image(game.world.centerX, 280, 'narobe');
             var style3 = {font: "40px Arial", fill: "#000000", align: "center"};
 
-            narobe = game.add.text(game.world.left, game.world.centerY, 'Pravilna: ' + correctNote, style3);
+            narobe = game.add.text(73, 320, 'Pravilna: ' + correctNote, style3);
             narobe.alpha = 1;
             game.add.tween(narobe).to({alpha: 0}, 1000, "Linear", true);
 
-            pravilna = game.add.text(500, yPositions[correctNoteNumber] - 8, correctNote, style3);
-            pravilna.alpha = 1;
-            game.add.tween(pravilna).to({alpha: 0}, 1000, "Linear", true);
+            //pravilna = game.add.text(500, correctNoteNumber, correctNote, style3);
+            //pravilna.alpha = 1;
+            //game.add.tween(pravilna).to({alpha: 0}, 1000, "Linear", true);
 
             napacni++;
         }
 
         uspeh = pravilni / counter;
         uspehOds = uspeh * 100;
-        console.log('uspeh', uspeh, ', pravilni', pravilni);
+        //console.log('uspeh', uspeh, ', pravilni', pravilni);
 
         //besediloUspeh.setText("Uspeh: " + uspehOds.toFixed(0) + "%");
 
@@ -368,7 +438,7 @@ window.onload = function () {
         trenutniRez.alpha = 1;
         game.add.tween(trenutniRez).to({alpha: 0}, 1000, "Linear", true);
 
-        game.add.tween(nota).to({alpha: 0}, 500, "Linear", true);
+        game.add.tween(prikazanaNota).to({alpha: 0}, 500, "Linear", true);
 
         var timer = game.time.create(false);
         timer.add(350, nextNote, this);
@@ -377,69 +447,121 @@ window.onload = function () {
         //nextNote();
     }
 
+    function prepareNotes(){
+
+        //if(violinskiOption.state === true){
+        //    izbraniKljuc = yViolinski;
+        //}
+        //else if(basovskiOption.state === true){
+        //    izbraniKljuc = yBasovski;
+        //}
+        //else if(altovskiOption.state === true){
+        //    izbraniKljuc = yAltovski;
+        //}
+        //else if(sopranskiOption.state === true){
+        //    izbraniKljuc = ySopranski;
+        //}
+        //else if(tenorskiOption.state === true){
+        //    izbraniKljuc = yTenorski;
+        //}
+
+        for(var i in izbraniKljuc) {
+            if(cOption.state === true && izbraniKljuc[i] === 'c') {
+                koncneNote.push(i);
+            }
+            else if(dOption.state === true && izbraniKljuc[i] === 'd') {
+                koncneNote.push(i);
+            }
+            else if(eOption.state === true && izbraniKljuc[i] === 'e') {
+                koncneNote.push(i);
+            }
+            else if(fOption.state === true && izbraniKljuc[i] === 'f') {
+                koncneNote.push(i);
+            }
+            else if(gOption.state === true && izbraniKljuc[i] === 'g') {
+                koncneNote.push(i);
+            }
+            else if(aOption.state === true && izbraniKljuc[i] === 'a') {
+                koncneNote.push(i);
+            }
+            else if(hOption.state === true && izbraniKljuc[i] === 'h') {
+                koncneNote.push(i);
+            }
+
+            else if(cisOption.state === true && izbraniKljuc[i] === 'cis') {
+                koncneNote.push(i);
+            }
+            else if(disOption.state === true && izbraniKljuc[i] === 'dis') {
+                koncneNote.push(i);
+            }
+            else if(eisOption.state === true && izbraniKljuc[i] === 'eis') {
+                koncneNote.push(i);
+            }
+            else if(fisOption.state === true && izbraniKljuc[i] === 'fis') {
+                koncneNote.push(i);
+            }
+            else if(gisOption.state === true && izbraniKljuc[i] === 'gis') {
+                koncneNote.push(i);
+            }
+            else if(aisOption.state === true && izbraniKljuc[i] === 'ais') {
+                koncneNote.push(i);
+            }
+            else if(hisOption.state === true && izbraniKljuc[i] === 'his') {
+                koncneNote.push(i);
+            }
+
+
+            else if(cesOption.state === true && izbraniKljuc[i] === 'ces') {
+                koncneNote.push(i);
+            }
+            else if(desOption.state === true && izbraniKljuc[i] === 'des') {
+                koncneNote.push(i);
+            }
+            else if(esOption.state === true && izbraniKljuc[i] === 'es') {
+                koncneNote.push(i);
+            }
+            else if(fesOption.state === true && izbraniKljuc[i] === 'fes') {
+                koncneNote.push(i);
+            }
+            else if(gesOption.state === true && izbraniKljuc[i] === 'ges') {
+                koncneNote.push(i);
+            }
+            else if(asOption.state === true && izbraniKljuc[i] === 'as') {
+                koncneNote.push(i);
+            }
+            else if(hesOption.state === true && izbraniKljuc[i] === 'hes') {
+                koncneNote.push(i);
+            }
+        }
+
+        //console.log(koncneNote);
+        //console.log(izbraniKljuc);
+        //console.log(yPositions);
+    }
+
     function nextNote() {
-        console.log('next');
+        //console.log('next');
+        var nextN = Math.round(Math.random() * (koncneNote.length-1));
+        //console.log(nextN);
 
-        var nextN = Math.round(Math.random() * (6)); // namesto 7 stevilo not
 
-
-        console.log(nextN === 0 && cOption.state === true);
-        console.log(nextN === 1 && dOption.state === true);
-        console.log(nextN === 2 && eOption.state === true);
-        console.log(nextN === 3 && fOption.state === true);
-        console.log(nextN === 4 && gOption.state === true);
-        console.log(nextN === 5 && aOption.state === true);
-        console.log(nextN === 6 && hOption.state === true);
-
-        if (nota !== null) {
-            nota.kill();
+        if (prikazanaNota !== null) {
+            prikazanaNota.kill();
         }
 
-        //(spodnji) 0 = C, 1 = D, 2 = E, 3 = F, 4 = G, 5 = A, 6 = H
-        if (nextN === 0 && cOption.state === true) {
-            nota = game.add.image(game.world.centerX, yPositions[0], 'nota0'); // c spodnji
-            correctNote = 'c';
-            correctNoteNumber = 0;
-        }
-        else if (nextN === 1 && dOption.state === true) {
-            nota = game.add.image(game.world.centerX, yPositions[1], 'nota1'); // d spodnji
-            correctNote = 'd';
-            correctNoteNumber = 1;
-        }
-        else if (nextN === 2 && eOption.state === true) {
-            nota = game.add.image(game.world.centerX, yPositions[2], 'nota1'); // e spodnji
-            correctNote = 'e';
-            correctNoteNumber = 2;
-        }
-        else if (nextN === 3 && fOption.state === true) {
-            nota = game.add.image(game.world.centerX, yPositions[3], 'nota1'); // f spodnji
-            correctNote = 'f';
-            correctNoteNumber = 3;
-        }
-        else if (nextN === 4 && gOption.state === true) {
-            nota = game.add.image(game.world.centerX, yPositions[4], 'nota1'); // g spodnji
-            correctNote = 'g';
-            correctNoteNumber = 4;
-        }
-        else if (nextN === 5 && aOption.state === true) {
-            nota = game.add.image(game.world.centerX, yPositions[5], 'nota1'); // a spodnji
-            correctNote = 'a';
-            correctNoteNumber = 5;
-        }
-        else if (nextN === 6 && hOption.state === true) {
-            nota = game.add.image(game.world.centerX, yPositions[6], 'nota1'); // h spodnji
-            correctNote = 'h';
-            correctNoteNumber = 6;
-        }
-        else {
-            nextNote();
-        }
+        //console.log('ypos', yPositions[koncneNote[nextN]]);
+        //console.log(notaCrtaBrez[koncneNote[nextN]]);
+        //console.log(izbraniKljuc[koncneNote[nextN]]);
 
-        nota.alpha = 0;
-        game.add.tween(nota).to({alpha: 1}, 500, "Linear", true);
+        prikazanaNota = game.add.image(game.world.centerX, yPositions[koncneNote[nextN]], notaCrtaBrez[koncneNote[nextN]]);
+        prikazanaNota.name = izbraniKljuc[koncneNote[nextN]];
+        correctNote = izbraniKljuc[koncneNote[nextN]];
+        correctNoteNumber = yPositions[koncneNote[nextN]];
 
-        //nota = game.add.image(game.world.centerX, 126, 'nota1'); // TEST
-        console.log(nextN);
+        //console.log('correctNN', correctNoteNumber);
+
+        prikazanaNota.alpha = 0;
+        game.add.tween(prikazanaNota).to({alpha: 1}, 500, "Linear", true);
     }
 
     function setMode(newMode) {
@@ -460,87 +582,208 @@ window.onload = function () {
         nastavitveText = game.add.text(game.world.centerX, game.world.top, "Nastavitve", style1);
         nastavitveText.anchor.set(0.5, -0.5);
 
-
         var style2 = {font: "30px Arial", fill: "#000000", align: "center"};
         noteSelectText = game.add.text(50, 80, "Izberi note", style2);
 
+        /* OSNOVNI */
         cOption = game.add.checkbox(50, 125, {text: 'C', style: {fill: '#000000', fontSize: 20}}, 'checkbox', true, -5);
         cOption.inputEnabled = true;
-        cOption.events.onInputUp.add(checkSelected, this);
+        cOption.events.onInputUp.add(ckeckIfEnoughSelected, this);
 
         dOption = game.add.checkbox(50, 155, {text: 'D', style: {fill: '#000000', fontSize: 20}}, 'checkbox', true, -5);
         dOption.inputEnabled = true;
-        dOption.events.onInputUp.add(checkSelected, this);
+        dOption.events.onInputUp.add(ckeckIfEnoughSelected, this);
 
         eOption = game.add.checkbox(50, 185, {text: 'E', style: {fill: '#000000', fontSize: 20}}, 'checkbox', true, -5);
         eOption.inputEnabled = true;
-        eOption.events.onInputUp.add(checkSelected, this);
+        eOption.events.onInputUp.add(ckeckIfEnoughSelected, this);
 
         fOption = game.add.checkbox(50, 215, {text: 'F', style: {fill: '#000000', fontSize: 20}}, 'checkbox', true, -5);
         fOption.inputEnabled = true;
-        fOption.events.onInputUp.add(checkSelected, this);
+        fOption.events.onInputUp.add(ckeckIfEnoughSelected, this);
 
         gOption = game.add.checkbox(50, 245, {text: 'G', style: {fill: '#000000', fontSize: 20}}, 'checkbox', true, -5);
         gOption.inputEnabled = true;
-        gOption.events.onInputUp.add(checkSelected, this);
+        gOption.events.onInputUp.add(ckeckIfEnoughSelected, this);
 
         aOption = game.add.checkbox(50, 275, {text: 'A', style: {fill: '#000000', fontSize: 20}}, 'checkbox', true, -5);
         aOption.inputEnabled = true;
-        aOption.events.onInputUp.add(checkSelected, this);
+        aOption.events.onInputUp.add(ckeckIfEnoughSelected, this);
 
         hOption = game.add.checkbox(50, 305, {text: 'H', style: {fill: '#000000', fontSize: 20}}, 'checkbox', true, -5);
         hOption.inputEnabled = true;
-        hOption.events.onInputUp.add(checkSelected, this);
+        hOption.events.onInputUp.add(ckeckIfEnoughSelected, this);
+        /* OSNOVNI */
 
-        kljucSelectText = game.add.text(250, 80, "Izberi ključe", style2);
+        /* VISAJI */
+        cisOption = game.add.checkbox(150, 125, {text: 'Cis', style: {fill: '#000000', fontSize: 20}}, 'checkbox', false, -5);
+        cisOption.inputEnabled = true;
+        cisOption.events.onInputUp.add(ckeckIfEnoughSelected, this);
 
-        violinskiOption = game.add.checkbox(250, 125, {text: 'violinski', style: {fill: '#000000', fontSize: 20}}, 'checkbox', true, -7);
-        violinskiOption.enabled = false;
-        basovskiOption = game.add.checkbox(250, 155, {text: 'basovski', style: {fill: '#000000', fontSize: 20}}, 'checkbox', undefined, -7);
-        basovskiOption.enabled = false;
+        disOption = game.add.checkbox(150, 155, {text: 'Dis', style: {fill: '#000000', fontSize: 20}}, 'checkbox', false, -5);
+        disOption.inputEnabled = true;
+        disOption.events.onInputUp.add(ckeckIfEnoughSelected, this);
+
+        eisOption = game.add.checkbox(150, 185, {text: 'Eis', style: {fill: '#000000', fontSize: 20}}, 'checkbox', false, -5);
+        eisOption.inputEnabled = true;
+        eisOption.events.onInputUp.add(ckeckIfEnoughSelected, this);
+
+        fisOption = game.add.checkbox(150, 215, {text: 'Fis', style: {fill: '#000000', fontSize: 20}}, 'checkbox', false, -5);
+        fisOption.inputEnabled = true;
+        fisOption.events.onInputUp.add(ckeckIfEnoughSelected, this);
+
+        gisOption = game.add.checkbox(150, 245, {text: 'Gis', style: {fill: '#000000', fontSize: 20}}, 'checkbox', false, -5);
+        gisOption.inputEnabled = true;
+        gisOption.events.onInputUp.add(ckeckIfEnoughSelected, this);
+
+        aisOption = game.add.checkbox(150, 275, {text: 'Ais', style: {fill: '#000000', fontSize: 20}}, 'checkbox', false, -5);
+        aisOption.inputEnabled = true;
+        aisOption.events.onInputUp.add(ckeckIfEnoughSelected, this);
+
+        hisOption = game.add.checkbox(150, 305, {text: 'His', style: {fill: '#000000', fontSize: 20}}, 'checkbox', false, -5);
+        hisOption.inputEnabled = true;
+        hisOption.events.onInputUp.add(ckeckIfEnoughSelected, this);
+        /* VISAJI */
+
+        /* NIZAJI */
+        cesOption = game.add.checkbox(250, 125, {text: 'Ces', style: {fill: '#000000', fontSize: 20}}, 'checkbox', false, -5);
+        cesOption.inputEnabled = true;
+        cesOption.events.onInputUp.add(ckeckIfEnoughSelected, this);
+
+        desOption = game.add.checkbox(250, 155, {text: 'Des', style: {fill: '#000000', fontSize: 20}}, 'checkbox', false, -5);
+        desOption.inputEnabled = true;
+        desOption.events.onInputUp.add(ckeckIfEnoughSelected, this);
+
+        esOption = game.add.checkbox(250, 185, {text: 'Es', style: {fill: '#000000', fontSize: 20}}, 'checkbox', false, -5);
+        esOption.inputEnabled = true;
+        esOption.events.onInputUp.add(ckeckIfEnoughSelected, this);
+
+        fesOption = game.add.checkbox(250, 215, {text: 'Fes', style: {fill: '#000000', fontSize: 20}}, 'checkbox', false, -5);
+        fesOption.inputEnabled = true;
+        fesOption.events.onInputUp.add(ckeckIfEnoughSelected, this);
+
+        gesOption = game.add.checkbox(250, 245, {text: 'Ges', style: {fill: '#000000', fontSize: 20}}, 'checkbox', false, -5);
+        gesOption.inputEnabled = true;
+        gesOption.events.onInputUp.add(ckeckIfEnoughSelected, this);
+
+        asOption = game.add.checkbox(250, 275, {text: 'As', style: {fill: '#000000', fontSize: 20}}, 'checkbox', false, -5);
+        asOption.inputEnabled = true;
+        asOption.events.onInputUp.add(ckeckIfEnoughSelected, this);
+
+        hesOption = game.add.checkbox(250, 305, {text: 'Hes', style: {fill: '#000000', fontSize: 20}}, 'checkbox', false, -5);
+        hesOption.inputEnabled = true;
+        hesOption.events.onInputUp.add(ckeckIfEnoughSelected, this);
+        /* NIZAJI */
+
+
+
+        kljucSelectText = game.add.text(450, 80, "Izberi ključe", style2);
+
+        skupina = game.add.radioGroup('skupina');
+
+        violinskiOption = game.add.radiobutton(450, 125, {text: 'violinski', style: {fill: '#000000', fontSize: 20}}, 'radiobutton', true, -7);
+        basovskiOption = game.add.radiobutton(450, 155, {text: 'basovski', style: {fill: '#000000', fontSize: 20}}, 'radiobutton', undefined, -7);
+        altovskiOption = game.add.radiobutton(450, 185, {text: 'altovski', style: {fill: '#000000', fontSize: 20}}, 'radiobutton', undefined, -7);
+        sopranskiOption = game.add.radiobutton(450, 215, {text: 'sopranski', style: {fill: '#000000', fontSize: 20}}, 'radiobutton', undefined, -7);
+        tenorskiOption = game.add.radiobutton(450, 245, {text: 'tenorski', style: {fill: '#000000', fontSize: 20}}, 'radiobutton', undefined, -7);
+
+        skupina.add(violinskiOption);
+        skupina.add(basovskiOption);
+        skupina.add(altovskiOption);
+        skupina.add(sopranskiOption);
+        skupina.add(tenorskiOption);
+
+        //for(var i in skupina.children) {
+            //console.log(skupina.children[i].name);
+        //}
 
         naprejBtn = game.add.button(800, 600, 'naprej', proceed, this, 2, 1, 0);
         naprejBtn.anchor.set(1, 1);
-        console.log(naprejBtn);
-
 
         nazajBtn = game.add.button(0, 600, 'nazaj', gotoMain, this, 2, 1, 0);
         nazajBtn.anchor.set(0, 1);
     }
 
+    var skupina;
     var neIzbrani = null;
-
-    function checkSelected() {
-        console.log("testing");
+    function ckeckIfEnoughSelected() {
+        //console.log("testing");
         if(neIzbrani !== null) {
             neIzbrani.kill();
         }
 
         var x = 0;
 
-        if(cOption.state === false){
+        if(cOption.state === true){
             x++;
         }
-        if(dOption.state === false){
+        if(dOption.state === true){
             x++;
         }
-        if(eOption.state === false){
+        if(eOption.state === true){
             x++;
         }
-        if(fOption.state === false){
+        if(fOption.state === true){
             x++;
         }
-        if(gOption.state === false){
+        if(gOption.state === true){
             x++;
         }
-        if(aOption.state === false){
+        if(aOption.state === true){
             x++;
         }
-        if(hOption.state === false){
+        if(hOption.state === true){
             x++;
         }
 
-        if(x > 5) {
+        ////
+        if(cisOption.state === true){
+            x++;
+        }
+        if(disOption.state === true){
+            x++;
+        }
+        if(eisOption.state === true){
+            x++;
+        }
+        if(fisOption.state === true){
+            x++;
+        }
+        if(gisOption.state === true){
+            x++;
+        }
+        if(aisOption.state === true){
+            x++;
+        }
+        if(hisOption.state === true){
+            x++;
+        }
+
+        ////
+        if(cesOption.state === true){
+            x++;
+        }
+        if(desOption.state === true){
+            x++;
+        }
+        if(esOption.state === true){
+            x++;
+        }
+        if(fesOption.state === true){
+            x++;
+        }
+        if(gesOption.state === true){
+            x++;
+        }
+        if(asOption.state === true){
+            x++;
+        }
+        if(hesOption.state === true){
+            x++;
+        }
+
+
+        if(x < 2) {
             var style = {font: "30px Arial", fill: "#ff0000", align: "center"};
             neIzbrani = game.add.text(game.world.centerX, 600, "Izberi vsaj 2 noti", style);
             neIzbrani.anchor.set(0.5, 1);
@@ -556,7 +799,7 @@ window.onload = function () {
     }
 
     function proceed() {
-        if(checkSelected() === true) {
+        if(ckeckIfEnoughSelected() === true) {
             zacniAkcija();
         }
     }
@@ -575,12 +818,30 @@ window.onload = function () {
         aOption.kill();
         hOption.kill();
 
+        cisOption.kill();
+        disOption.kill();
+        eisOption.kill();
+        fisOption.kill();
+        gisOption.kill();
+        aisOption.kill();
+        hisOption.kill();
+
+        cesOption.kill();
+        desOption.kill();
+        esOption.kill();
+        fesOption.kill();
+        gesOption.kill();
+        asOption.kill();
+        hesOption.kill();
+
+
         violinskiOption.kill();
         basovskiOption.kill();
+        altovskiOption.kill();
+        sopranskiOption.kill();
+        tenorskiOption.kill();
 
         naprejBtn.kill();
         nazajBtn.kill();
     }
-
-
 };
