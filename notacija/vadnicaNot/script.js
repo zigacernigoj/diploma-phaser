@@ -1220,7 +1220,9 @@ window.onload = function () {
 
         pauseBtn.kill();
 
-        updateTimer.destroy();
+        if(updateTimer !== undefined) {
+            updateTimer.destroy();
+        }
     }
 
 
