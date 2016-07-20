@@ -295,7 +295,7 @@ window.onload = function () {
         pauseBtn = game.add.button(752, 6, 'pause', pause1, this, 2, 1, 0);
         pauseBtn.scale.setTo(1.5, 1.5);
 
-        stopBtn = game.add.button(778, 6, 'stop', showResults, this, 2, 1, 0);
+        stopBtn = game.add.button(776, 6, 'stop', showResults, this, 2, 1, 0);
         stopBtn.scale.setTo(1.5, 1.5);
 
     }
