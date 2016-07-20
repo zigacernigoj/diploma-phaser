@@ -105,12 +105,15 @@ window.onload = function () {
     var limitTime = -1;
     var limitTimeText;
     var timeCounter;
+    var updateTimer;
 
     var plusBtn, minusBtn;
 
     var limitText;
 
     var navbar = null;
+    var navbarBackground;
+
     var pauseText = null;
     var pauseMenuBg;
     var narobeSound;
@@ -210,6 +213,7 @@ window.onload = function () {
 
     function create() {
         loadingText.kill();
+        destroyNavbar();
         destroyResults();
 
         game.stage.backgroundColor = '#82aed6';
@@ -249,7 +253,6 @@ window.onload = function () {
     }
 
     function createNavbar() {
-        var drawnObject;
         var width = 800; // example;
         var height = navbarHeight; // example;
         var bmd = game.add.bitmapData(width, height);
@@ -258,8 +261,8 @@ window.onload = function () {
         bmd.ctx.rect(0, 0, width, height);
         bmd.ctx.fillStyle = '#363636';
         bmd.ctx.fill();
-        drawnObject = game.add.sprite(0, 0, bmd);
-        //drawnObject.anchor.setTo(0.5, 0.5);
+        navbarBackground = game.add.sprite(0, 0, bmd);
+        //navbarBackground.anchor.setTo(0.5, 0.5);
 
         var style3 = {
             font: "25px Arial",
@@ -298,8 +301,8 @@ window.onload = function () {
             game.paused = false;
             pauseText.kill();
             pauseMenuBg.kill();
-            nadaljujBtn.kill();
-            koncajBtn.kill();
+            //nadaljujBtn.kill();
+            //koncajBtn.kill();
         }
     }
 
@@ -330,13 +333,13 @@ window.onload = function () {
         );
         pauseText.anchor.setTo(0.5, 0.5);
 
-        //game.input.onDown.add(unPause, self);
+        game.input.onDown.add(unPause, self);
 
-        nadaljujBtn = game.add.button(800, 600, 'nadaljuj', unPause, this, 2, 1, 0);
-        nadaljujBtn.anchor.set(1, 1);
-
-        koncajBtn = game.add.button(0, 600, 'koncaj', gotoMain, this, 2, 1, 0);
-        koncajBtn.anchor.set(0, 1);
+        //nadaljujBtn = game.add.button(800, 600, 'nadaljuj', unPause, this, 2, 1, 0);
+        //nadaljujBtn.anchor.set(1, 1);
+        //
+        //koncajBtn = game.add.button(0, 600, 'koncaj', gotoMain, this, 2, 1, 0);
+        //koncajBtn.anchor.set(0, 1);
 
     }
 
@@ -367,9 +370,9 @@ window.onload = function () {
             timeCounter.add(limitTime * 1000, showResults, this);
             timeCounter.start();
 
-            var timer = game.time.create(false);
-            timer.loop(100, updateTimeText, this);
-            timer.start();
+            updateTimer = game.time.create(false);
+            updateTimer.loop(100, updateTimeText, this);
+            updateTimer.start();
         }
 
         //var style = {font: "40px Arial", fill: "#000000", align: "center"};
@@ -648,6 +651,7 @@ window.onload = function () {
     function makeSettings() {
 
         destroyStartScreen();
+        destroyNavbar();
         destroyResults();
 
         // barva gumbov #3D85C6
@@ -1137,6 +1141,8 @@ window.onload = function () {
         hesBtn.kill();
 
         pauseBtn.kill();
+
+        updateTimer.destroy();
     }
 
 
@@ -1156,19 +1162,38 @@ window.onload = function () {
 
         //nazajBtn = game.add.button(0, 600, 'nazaj', create, this, 2, 1, 0);
         //nazajBtn.anchor.set(0, 1);
-
     }
 
     function destroyResults() {
-        if(finalResults !== undefined) {
+        if (finalResults !== undefined) {
             finalResults.kill();
         }
 
-        if(nazajBtn !== undefined) {
+        if (nazajBtn !== undefined) {
             nazajBtn.kill();
         }
-        if(naprejBtn !== undefined) {
+        if (naprejBtn !== undefined) {
             naprejBtn.kill();
         }
+    }
+
+    function destroyNavbar() {
+        if (navbarBackground !== undefined && navbarBackground !== null) {
+            navbarBackground.kill();
+        }
+        if (gameNameText !== undefined && gameNameText !== null) {
+            gameNameText.kill();
+        }
+        if (uspehText !== undefined && uspehText !== null) {
+            uspehText.kill();
+        }
+        if (preostaliPrimeriText !== undefined && preostaliPrimeriText !== null) {
+            preostaliPrimeriText.kill();
+        }
+        if (preostaliCasText !== undefined && preostaliCasText !== null) {
+            preostaliCasText.kill();
+        }
+
+
     }
 };
