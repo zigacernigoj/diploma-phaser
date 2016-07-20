@@ -83,8 +83,7 @@ window.onload = function () {
     var preostaliPrimeriText = null;
     var preostaliCasText = null;
 
-    var playBtn = null;
-    var pauseBtn = null;
+    var playBtn, pauseBtn, stopBtn;
 
     //var besediloUspeh = null;
     var narobe = null;
@@ -148,6 +147,7 @@ window.onload = function () {
 
         game.load.image('pause', baseURL + mode + '/btn/navbar/pauseWhiteBtn.png');
         game.load.image('play', baseURL + mode + '/btn/navbar/playWhiteBtn.png');
+        game.load.image('stop', baseURL + mode + '/btn/navbar/stopWhiteBtn.png');
 
         game.load.image('plus', baseURL + mode + '/btn/plusBtn.png');
         game.load.image('minus', baseURL + mode + '/btn/minusBtn.png');
@@ -274,7 +274,7 @@ window.onload = function () {
         };
         gameNameText = game.add.text(paddingLeftSmall, game.world.top, "Vadnica not", style3);
 
-        uspehText = game.add.text(600, game.world.top, "Uspeh: " + uspehOds.toFixed(0) + "%", style3);
+        uspehText = game.add.text(580, game.world.top, "Uspeh: " + uspehOds.toFixed(0) + "%", style3);
         //uspehText.anchor.setTo(1, 0);
 
         if (limitCounter === -1) {
@@ -292,9 +292,12 @@ window.onload = function () {
         }
 
 
-        pauseBtn = game.add.button(778, 6, 'pause', pause1, this, 2, 1, 0);
+        pauseBtn = game.add.button(752, 6, 'pause', pause1, this, 2, 1, 0);
         pauseBtn.scale.setTo(1.5, 1.5);
-        pauseBtn.frame = game.paused;
+
+        stopBtn = game.add.button(778, 6, 'stop', showResults, this, 2, 1, 0);
+        stopBtn.scale.setTo(1.5, 1.5);
+
     }
 
     function unPause() {
@@ -1218,7 +1221,13 @@ window.onload = function () {
         asBtn.kill();
         hesBtn.kill();
 
-        pauseBtn.kill();
+        if(pauseBtn !== undefined && pauseBtn !== null) {
+            pauseBtn.kill();
+        }
+
+        if(stopBtn !== undefined && stopBtn !== null) {
+            stopBtn.kill();
+        }
 
         if(updateTimer !== undefined) {
             updateTimer.destroy();
