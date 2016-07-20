@@ -1255,6 +1255,15 @@ window.onload = function () {
         if (naprejBtn !== undefined) {
             naprejBtn.kill();
         }
+        counter = 0;
+        limitCounter = -1;
+        limitTime = -1;
+
+        counter = 0;
+        pravilni = 0;
+        napacni = 0;
+        uspeh = 0;
+        uspehOds = 0;
     }
 
     function destroyNavbar() {
