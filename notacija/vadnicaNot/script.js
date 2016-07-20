@@ -214,6 +214,7 @@ window.onload = function () {
     function create() {
         loadingText.kill();
         destroyNavbar();
+        destroySettings();
         destroyResults();
 
         game.stage.backgroundColor = '#82aed6';
@@ -344,7 +345,7 @@ window.onload = function () {
     }
 
     function gotoMain() {
-        window.location.href = 'https://www.google.si';
+        window.location.href = 'https://zigacernigoj.github.io/';
     }
 
     function destroyStartScreen() {
@@ -864,7 +865,7 @@ window.onload = function () {
         naprejBtn = game.add.button(800, 600, 'naprej', proceed, this, 2, 1, 0);
         naprejBtn.anchor.set(1, 1);
 
-        nazajBtn = game.add.button(0, 600, 'nazaj', gotoMain, this, 2, 1, 0);
+        nazajBtn = game.add.button(0, 600, 'nazaj', create, this, 2, 1, 0);
         nazajBtn.anchor.set(0, 1);
     }
 
@@ -1049,49 +1050,121 @@ window.onload = function () {
 
     function destroySettings() {
 
-        nastavitveText.kill();
-        noteSelectText.kill();
-        kljucSelectText.kill();
-        limitText.kill();
+        if (nastavitveText !== undefined && nastavitveText !== null) {
+            nastavitveText.kill();
+        }
+        if (noteSelectText !== undefined && noteSelectText !== null) {
+            noteSelectText.kill();
+        }
+        if (kljucSelectText !== undefined && kljucSelectText !== null) {
+            kljucSelectText.kill();
+        }
+        if (limitText !== undefined && limitText !== null) {
+            limitText.kill();
+        }
 
-        cOption.kill();
-        dOption.kill();
-        eOption.kill();
-        fOption.kill();
-        gOption.kill();
-        aOption.kill();
-        hOption.kill();
+        //////////////
+        if (cOption !== undefined && cOption !== null) {
+            cOption.kill();
+        }
+        if (dOption !== undefined && dOption !== null) {
+            dOption.kill();
+        }
+        if (eOption !== undefined && eOption !== null) {
+            eOption.kill();
+        }
+        if (fOption !== undefined && fOption !== null) {
+            fOption.kill();
+        }
+        if (gOption !== undefined && gOption !== null) {
+            gOption.kill();
+        }
+        if (aOption !== undefined && aOption !== null) {
+            aOption.kill();
+        }
+        if (hOption !== undefined && hOption !== null) {
+            hOption.kill();
+        }
 
-        cisOption.kill();
-        disOption.kill();
-        eisOption.kill();
-        fisOption.kill();
-        gisOption.kill();
-        aisOption.kill();
-        hisOption.kill();
+        if (cisOption !== undefined && cisOption !== null) {
+            cisOption.kill();
+        }
+        if (disOption !== undefined && disOption !== null) {
+            disOption.kill();
+        }
+        if (eisOption !== undefined && eisOption !== null) {
+            eisOption.kill();
+        }
+        if (fisOption !== undefined && fisOption !== null) {
+            fisOption.kill();
+        }
+        if (gisOption !== undefined && gisOption !== null) {
+            gisOption.kill();
+        }
+        if (aisOption !== undefined && aisOption !== null) {
+            aisOption.kill();
+        }
+        if (hisOption !== undefined && hisOption !== null) {
+            hisOption.kill();
+        }
 
-        cesOption.kill();
-        desOption.kill();
-        esOption.kill();
-        fesOption.kill();
-        gesOption.kill();
-        asOption.kill();
-        hesOption.kill();
 
-        violinskiOption.kill();
-        basovskiOption.kill();
-        altovskiOption.kill();
-        sopranskiOption.kill();
-        tenorskiOption.kill();
+        if (cesOption !== undefined && cesOption !== null) {
+            cesOption.kill();
+        }
+        if (desOption !== undefined && desOption !== null) {
+            desOption.kill();
+        }
+        if (esOption !== undefined && esOption !== null) {
+            esOption.kill();
+        }
+        if (fesOption !== undefined && fesOption !== null) {
+            fesOption.kill();
+        }
+        if (gesOption !== undefined && gesOption !== null) {
+            gesOption.kill();
+        }
+        if (asOption !== undefined && asOption !== null) {
+            asOption.kill();
+        }
+        if (hesOption !== undefined && hesOption !== null) {
+            hesOption.kill();
+        }
 
-        neomejenoOption.kill();
 
-        counterOption.kill();
+        if (violinskiOption !== undefined && violinskiOption !== null) {
+            violinskiOption.kill();
+        }
+        if (basovskiOption !== undefined && basovskiOption !== null) {
+            basovskiOption.kill();
+        }
+        if (altovskiOption !== undefined && altovskiOption !== null) {
+            altovskiOption.kill();
+        }
+        if (sopranskiOption !== undefined && sopranskiOption !== null) {
+            sopranskiOption.kill();
+        }
+        if (tenorskiOption !== undefined && tenorskiOption !== null) {
+            tenorskiOption.kill();
+        }
+
+        if (neomejenoOption !== undefined && neomejenoOption !== null) {
+            neomejenoOption.kill();
+        }
+
+
+        if (counterOption !== undefined && counterOption !== null) {
+            counterOption.kill();
+        }
+
         if (limitCounterText !== undefined) {
             limitCounterText.kill();
         }
 
-        timeOption.kill();
+        if (timeOption !== undefined && timeOption !== null) {
+            timeOption.kill();
+        }
+
         if (limitTimeText !== undefined) {
             limitTimeText.kill();
         }
@@ -1103,8 +1176,13 @@ window.onload = function () {
             minusBtn.kill();
         }
 
-        naprejBtn.kill();
-        nazajBtn.kill();
+        if (naprejBtn !== undefined && naprejBtn !== undefined) {
+            naprejBtn.kill();
+        }
+        if (nazajBtn !== undefined && nazajBtn !== undefined) {
+            nazajBtn.kill();
+        }
+
     }
 
     function destroyGame() {
