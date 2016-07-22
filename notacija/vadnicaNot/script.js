@@ -126,8 +126,8 @@ window.onload = function () {
         game.load.crossOrigin = 'anonymous';
 
 
-        game.load.spritesheet('checkbox', 'checkbox.png', 12, 12);
-        game.load.spritesheet('radiobutton', 'radiobutton.png', 12, 12);
+        game.load.spritesheet('checkbox', baseURL + mode + '/btn/checkbox.png', 12, 12);
+        game.load.spritesheet('radiobutton', baseURL + mode + '/btn/radiobutton.png', 12, 12);
 
         loadNoteImgs();
         loadPravilnostImgs();
