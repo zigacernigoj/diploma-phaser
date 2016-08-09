@@ -66,8 +66,8 @@ var cistaKvarta = [ // pozicija 1, pozicija 2, slika 1, slika 2
     [yPositions[1], yPositions[4], notaCrtaBrez[1], notaCrtaBrez[4]],
     [yPositions[2], yPositions[5], notaCrtaBrez[2], notaCrtaBrez[5]],
     [yPositions[4], yPositions[7], notaCrtaBrez[4], notaCrtaBrez[7]],
-    [yPositions[5], yPositions[8], notaCrtaBrez[5], notaCrtaBrez[8]]
-        [yPositions[6], yPositions[9], notaCrtaBrez[6], notaCrtaBrez[9]]
+    [yPositions[5], yPositions[8], notaCrtaBrez[5], notaCrtaBrez[8]],
+    [yPositions[6], yPositions[9], notaCrtaBrez[6], notaCrtaBrez[9]]
 ];
 
 var cistaKvinta = [ // pozicija 1, pozicija 2, slika 1, slika 2
